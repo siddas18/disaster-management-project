@@ -30,3 +30,4 @@
 ## Notes:
 
 - The scripts aren't sorted in the correct repositories and are only for convenience. To create a working directory, the original directory structure needs to be re-created. 
+- Source code on Github can be found at https://github.com/siddas18/disaster-management-project
