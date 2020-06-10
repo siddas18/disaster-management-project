@@ -1,5 +1,6 @@
 import sys
 import pandas as pd
+import numpy as np
 from sqlalchemy import create_engine
 
 def load_data(messages_filepath, categories_filepath):
@@ -15,6 +16,7 @@ def clean_data(df):
     categories.columns = category_colnames
     for column in categories:
         categories[column] = categories[column].apply(lambda x: x.split('-')[1])
+        categories[column] = categories[column].apply(lambda x: x if x in ['0','1'] else str(np.random.randint(2)))
         categories[column] = pd.to_numeric(categories[column])
     df.drop('categories',axis=1,inplace=True)
     df = pd.concat([df,categories],axis=1)
