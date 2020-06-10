@@ -9,6 +9,7 @@ from flask import Flask
 from flask import render_template, request, jsonify
 from plotly.graph_objs import Bar
 from sklearn.externals import joblib
+
 from sqlalchemy import create_engine
 
 
@@ -19,6 +20,7 @@ def tokenize(text):
     lemmatizer = WordNetLemmatizer()
 
     clean_tokens = []
+    
     for tok in tokens:
         clean_tok = lemmatizer.lemmatize(tok).lower().strip()
         clean_tokens.append(clean_tok)
@@ -32,7 +34,6 @@ df = pd.read_sql_table('tweets', engine)
 # load model
 model = joblib.load("../models/classifier.pkl")
 
-
 # index webpage displays cool visuals and receives user input text for model
 @app.route('/')
 @app.route('/index')
@@ -42,6 +43,9 @@ def index():
     # TODO: Below is an example - modify to extract data for your own visuals
     genre_counts = df.groupby('genre').count()['message']
     genre_names = list(genre_counts.index)
+    
+    class_counts = df.iloc[:,4:].sum().sort_values(ascending=False)
+    class_names = list(class_counts.index)
     
     # create visuals
     # TODO: Below is an example - modify to create your own visuals
@@ -61,6 +65,24 @@ def index():
                 },
                 'xaxis': {
                     'title': "Genre"
+                }
+            }
+        },
+        {
+            'data': [
+                Bar(
+                    x=class_names,
+                    y=class_counts
+                )
+            ],
+
+            'layout': {
+                'title': 'Distribution of Classification labels',
+                'yaxis': {
+                    'title': "Count"
+                },
+                'xaxis': {
+                    'title': "Labels"
                 }
             }
         }
