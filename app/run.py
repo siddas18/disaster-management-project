@@ -32,13 +32,21 @@ engine = create_engine('sqlite:///../data/DisasterResponse.db')
 df = pd.read_sql_table('tweets', engine)
 
 # load model
-model = joblib.load("../models/classifier.pkl")
+model = joblib.load("../data/classifier.pkl")
 
 # index webpage displays cool visuals and receives user input text for model
 @app.route('/')
 @app.route('/index')
 def index():
+    """
+    Two bar graphs created for our web app using Plotly.
     
+    Bar Graph 1: Distribution of genres across our tweets data
+    Bar Graph 2: Distribution of output labels across our tweets data. 
+    Since our tweet labels are a multi-class distribution, the cumulative count for Bar Graph 2 exceeds the total number of tweets.
+    
+    Graphs are rendered by passing JSON data to master.html
+    """
     # extract data needed for visuals
     # TODO: Below is an example - modify to extract data for your own visuals
     genre_counts = df.groupby('genre').count()['message']
